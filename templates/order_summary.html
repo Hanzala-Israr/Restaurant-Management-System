@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Order Summary</title>
+</head>
+<body>
+    <h1>Order Summary</h1>
+    <ul  id="order-list">
+        {% for item,quantity in order.items() %}
+        <li>{{ item }}: {{quantity}} * $ {{ menu[item]}} = pkr{{ quantity * menu[item] }}</li>
+        {% endfor %}
+    </ul>
+    <p> Total Cost: pkr{{ total }}</p>
+    <button class="button" onclick="pay()">pay</button>
+    <a href="/">Go back to Menu</a>
+
+    <div id="print-section" class="print-section">
+        <h2>Order Summary</h2>
+        <ul  id="order-list">
+            {% for item,quantity in order.items() %}
+            <li>{{ item }}: {{quantity}} * pkr {{ menu[item]}} = pkr{{ quantity * menu[item] }}</li>
+            {% endfor %}
+        </ul>
+        <p> Total Cost: pkr{{ total }}</p>
+        <p>Cafe Name : Pakistan Restaurant</p>
+
+    </div>
+
+    <script>
+        function pay(){
+            var totalCost = "{{ total }}";
+            var orderList = document.getElementById('order-list').innerHTML;
+            var printSection = document.getElementById('print-section');
+            printSection.innerHTML = `
+                <h2>Order Summary</h2>
+                <ul>${orderList}</ul>
+                <p>Total Cost: pkr${totalCost}</p>
+                <p>Cafe Name: Pakistan Restaurant</p>
+            `;
+            printSection.style.display = 'block';
+
+            var printWindow = window.open('','','height=600,width=800');
+            printWindow.document.write('<html><head><title>Print</title>');
+            printWindow.document.write('</head><body ');
+            printWindow.document.write('printSection.innerHTML');
+            printWindow.document.write('</body></html>');
+            printWindow.document.close();
+            printWindow.focus();
+            printSection.print();
+            printSection.style.display = 'none';
+
+            alert("Your order is  done. Total Cost is pkr" + totalCost);
+        }
+    </script>
+
+
+</body>
+</html>
